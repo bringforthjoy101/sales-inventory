@@ -322,7 +322,7 @@ const ReportsTable = () => {
 		})
 		const date = new Date()
 		doc.save(
-			`tiki_fish_orders_${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}_${date.getDate()}-${date.getMonth()}-${date.getFullYear()}.pdf`
+			`orders_${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}_${date.getDate()}-${date.getMonth()}-${date.getFullYear()}.pdf`
 		)
 	}
 
