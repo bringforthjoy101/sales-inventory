@@ -365,7 +365,7 @@ const ReportsTable = () => {
 		printWindow.document.write('<html><head><title>Sales Report</title>')
 		printWindow.document.write('<style>body { font-family: Courier, monospace; }</style>')
 		printWindow.document.write('</head><body>')
-		printWindow.document.write('<h2>CLUB CODED</h2>')
+		printWindow.document.write('<h2>THE CIRCLE LOUNGE</h2>')
 		printWindow.document.write('<p>Address: The Dome, Akure</p>')
 		printWindow.document.write(`<h3>Orders Report</h3>`)
 		printWindow.document.write(`<p>From: ${new Date(picker[0]).toLocaleDateString()} To: ${new Date(picker[1]).toLocaleDateString()}</p>`)
@@ -418,7 +418,7 @@ const ReportsTable = () => {
 		const doc = new jsPDF()
 		doc.setFontSize(24);
 		doc.setTextColor("blue");
-		doc.text("Club Coded.", 20, 20);
+		doc.text("THE CIRCLE LOUNGE.", 20, 20);
 		doc.setFontSize(12);
 		doc.text(`Report Summary from ${moment(picker[0]).format('LLL')} to ${moment(picker[1]).format('LLL')}`, 20, 30);
 		doc.autoTable({ html: '#report-table', startY: 40, startX: 80 })

@@ -103,7 +103,7 @@ const PreviewActions = ({ id, data }) => {
       const doc = new jsPDF()
       doc.setFontSize(24);
 		  doc.setTextColor("blue");
-      doc.text("CLUB CODED Sales.", 14, 20);
+      doc.text("THE CIRCLE LOUNGE Sales.", 14, 20);
   
       // Add title
       doc.setFontSize(12);
