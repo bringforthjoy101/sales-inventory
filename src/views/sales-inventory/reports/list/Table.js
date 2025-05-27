@@ -181,11 +181,20 @@ const ReportsTable = () => {
 		)
 	}
 
-	const handleRangeSearch = (date) => {
+	const handleRangeSearch = (date, dateStr, instance) => {
+		console.log('date', date)
+		console.log('dateStr', dateStr)
+		console.log('instance', instance)
 		const range = date.map((d) => new Date(d).getTime())
 		setPicker(range)
+		console.log('range', range)
+		const dates = dateStr.split('to')
+		const startDate = dates[0].trim()
+		const endDate = dates[1]?.trim()
+		console.log({startDate, endDate})
 		dispatch(
-			getSalesReport({ startDate: moment(date[0]).format('L').split('/').join('-'), endDate: moment(date[1]).format('L').split('/').join('-'), category: currentCategory.value })
+			// getSalesReport({ startDate: moment(date[0]).format('L').split('/').join('-'), endDate: moment(date[1]).split('/').join('-'), category: currentCategory.value })
+			getSalesReport({startDate, endDate})
 		)
 		dispatch(
 			getFilteredData(store.allData.orders, {
@@ -494,10 +503,12 @@ const ReportsTable = () => {
 								value={picker}
 								id="range-picker"
 								className="form-control"
-								onChange={(date) => handleRangeSearch(date)}
+								onChange={(date, dateStr, instance) => handleRangeSearch(date, dateStr, instance)}
 								options={{
 									mode: 'range',
 									defaultDate: ['2020-02-01', '2020-02-15'],
+									enableTime: true,
+									dateFormat: 'Y-m-d H:i',
 								}}
 							/>
 						</Col>
