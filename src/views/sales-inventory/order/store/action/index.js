@@ -20,9 +20,13 @@ export const getAllData = () => {
 	}
 }
 
-export const completeOrder = (orderId) => {
+export const completeOrder = (orderId, paymentMode) => {
 	return async dispatch => {
-	  const response = await apiRequest({url:`/orders/complete/${orderId}`, method:'GET'}, dispatch)
+	  const response = await apiRequest({
+      url: `/orders/complete/${orderId}`,
+      method: 'POST',
+      body: JSON.stringify({ paymentMode })
+    }, dispatch)
 	  if (response && response.data.status) {
 		  return response.data
 	  } else {

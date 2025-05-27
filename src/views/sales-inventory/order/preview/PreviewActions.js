@@ -1,10 +1,11 @@
 // ** React Imports
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
 
 // ** Third Party Components
-import { Card, CardBody, Button } from 'reactstrap'
+import { Card, CardBody, Button, Modal, ModalHeader, ModalBody, ModalFooter, Spinner, Label, Form } from 'reactstrap'
 import UpdateStatus from './UpdateStatus'
-import { swal, apiRequest } from '@utils'
+import { swal, apiRequest, selectThemeColors } from '@utils'
 import { useDispatch } from 'react-redux'
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
@@ -12,58 +13,60 @@ import moment from 'moment/moment'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { getOrder, completeOrder, nullifyOrder } from '../store/action'
+import Select from 'react-select'
 
 const PreviewActions = ({ id, data }) => {
 	const dispatch = useDispatch()
   const MySwal = withReactContent(Swal)
+  const [paymentModal, setPaymentModal] = useState(false)
+  const [selectedPaymentMode, setSelectedPaymentMode] = useState(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-	const completePayment = async (saleId) => {
-		const response = await apiRequest({ url: `/sales/complete/${saleId}`, method: 'GET' }, dispatch)
-		if (response) {
-			if (response.data.message) {
-				swal('Great job!', response.data.message, 'success')
-				dispatch(getOrder(id))
-			} else {
-				swal('Oops!', response.data.message, 'error')
-			}
-		} else {
-			swal('Oops!', 'Something went wrong with your network.', 'error')
-		}
-	}
+  const togglePaymentModal = () => {
+    setPaymentModal(!paymentModal)
+    if (!paymentModal) {
+      setSelectedPaymentMode(null)
+    }
+  }
 
-	const handleCompleteOrder = async (id) => {
-        return MySwal.fire({
-          title: 'Are you sure?',
-          text: "This action will complete this order!",
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'Yes, complete it!',
+  const paymentModeOptions = [
+    { value: 'cash', label: 'Cash' },
+    { value: 'transfer', label: 'Transfer' },
+    { value: 'pos', label: 'POS' },
+    { value: 'dynamic', label: 'Dynamic' }
+  ]
+
+  const handlePaymentSubmit = async (e) => {
+    e.preventDefault()
+    if (!selectedPaymentMode) {
+      swal('Oops!', 'Please select a payment mode', 'error')
+      return
+    }
+
+    setIsSubmitting(true)
+    try {
+      const completed = await dispatch(completeOrder(data.id, selectedPaymentMode.value))
+      if (completed) {
+        await dispatch(getOrder(id))
+        MySwal.fire({
+          icon: 'success',
+          title: 'Completed!',
+          text: 'Order has been completed.',
           customClass: {
-            confirmButton: 'btn btn-success',
-            cancelButton: 'btn btn-outline-danger ml-1'
-          },
-          buttonsStyling: false
-        }).then(async function (result) {
-          if (result.value) {
-            const completed = await dispatch(completeOrder(id))
-            if (completed) {
-              await dispatch(getOrder(id))
-                MySwal.fire({
-                    icon: 'success',
-                    title: 'Comleted!',
-                    text: 'Order has been completed.',
-                    customClass: {
-                      confirmButton: 'btn btn-primary'
-                    }
-                  })
-            //   history.push(`/products/list`)
-            }
-            
+            confirmButton: 'btn btn-primary'
           }
         })
-  	}
+        togglePaymentModal()
+      }
+    } catch (error) {
+      console.error(error)
+      swal('Oops!', 'Something went wrong while completing the order', 'error')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
-	  const handleNullifyOrder = async (id) => {
+	const handleNullifyOrder = async (id) => {
         return MySwal.fire({
           title: 'Are you sure?',
           text: "This action will cancelled this order!",
@@ -147,7 +150,7 @@ const PreviewActions = ({ id, data }) => {
           Send Invoice
         </Button.Ripple> */}
 
-				<Button.Ripple className="mb-75" color='success' onClick={() => handleCompleteOrder(data.id)} block disabled={data.status !== 'processing'}>
+				<Button.Ripple className="mb-75" color='success' onClick={togglePaymentModal} block disabled={data.status !== 'processing'}>
 					Complete Order
 				</Button.Ripple>
 				<Button.Ripple className='mb-75' color='danger' outline onClick={() => handleNullifyOrder(data.id)} block disabled={data.status !== 'processing'}>
@@ -167,6 +170,40 @@ const PreviewActions = ({ id, data }) => {
         <Button.Ripple color='success' block onClick={() => setAddPaymentOpen(true)}>
           Add Payment
         </Button.Ripple> */}
+
+        {/* Payment Mode Selection Modal */}
+        <Modal isOpen={paymentModal} toggle={togglePaymentModal} className="modal-dialog-centered" modalClassName="modal-info">
+          <ModalHeader toggle={togglePaymentModal}>Select Payment Mode</ModalHeader>
+          <Form onSubmit={handlePaymentSubmit}>
+            <ModalBody>
+              <div className="mb-1">
+                <Label className="form-label" for="paymentMode">
+                  Payment Mode
+                </Label>
+                <Select
+                  id="paymentMode"
+                  name="paymentMode"
+                  theme={selectThemeColors}
+                  className="react-select"
+                  classNamePrefix="select"
+                  options={paymentModeOptions}
+                  value={selectedPaymentMode}
+                  onChange={setSelectedPaymentMode}
+                  isClearable={false}
+                />
+              </div>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="secondary" onClick={togglePaymentModal} outline>
+                Cancel
+              </Button>
+              <Button color="primary" type="submit" disabled={isSubmitting}>
+                {isSubmitting && <Spinner color="white" size="sm" className="mr-1" />}
+                Complete Order
+              </Button>
+            </ModalFooter>
+          </Form>
+        </Modal>
 			</CardBody>
 		</Card>
 	)
