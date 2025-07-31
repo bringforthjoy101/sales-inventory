@@ -3,7 +3,7 @@
 //Template config options
 const themeConfig = {
   app: {
-    appName: 'THE CIRCLE LOUNGE',
+    appName: 'CODED CLUB',
     appLogoImage: require('@src/assets/images/logo/favicon1.ico').default
   },
   layout: {

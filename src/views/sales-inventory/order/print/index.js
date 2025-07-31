@@ -68,7 +68,7 @@ const { selectedOrder } = store
 				{/* <div className='col-md-3'> */}
 				<div className="d-flex justify-content-between flex-column pb-2">
 					<h2 className="text-center mb-1" style={{ color: '#000000' }}>
-					THE CIRCLE LOUNGE
+					CODED CLUB
 					</h2>
 					<span className="invoice-date-title text-center mb-1">The DOME Akure, Ondo State.</span>
 					<div className="mt-md-0 mt-2">
