@@ -133,6 +133,10 @@ const ManagerRoutes = [
         component: lazy(() => import('../../views/sales-inventory/reports/list')),
       },
       {
+        path: '/inventory-reports/list',
+        component: lazy(() => import('../../views/sales-inventory/inventory-reports/list')),
+      },
+      {
         path: '/withdrawals/list',
         component: lazy(() => import('../../views/sales-inventory/withdrawals/list')),
       },
@@ -223,6 +227,10 @@ const ManagerRoutes = [
         meta: {
           navLink: '/supplier/edit'
         }
+      },
+      {
+        path: '/picker',
+        component: lazy(() => import('../../views/sales-inventory/picker')),
       },
 ]
 
@@ -317,6 +325,10 @@ const BursaryRoutes = [
     path: '/transactions/list',
     component: lazy(() => import('../../views/sales-inventory/transactions/list')),
   },
+  {
+    path: '/picker',
+    component: lazy(() => import('../../views/sales-inventory/picker')),
+  },
 ]
 
 const SalesRepRoutes = [
@@ -392,6 +404,14 @@ const SalesRepRoutes = [
     component: lazy(() => import('../../views/sales-inventory/reports/list')),
   },
   {
+    path: '/inventory-reports/list',
+    component: lazy(() => import('../../views/sales-inventory/inventory-reports/list')),
+  },
+  {
+    path: '/picker',
+    component: lazy(() => import('../../views/sales-inventory/picker')),
+  },
+  {
     path: '/withdrawals/list',
     component: lazy(() => import('../../views/sales-inventory/withdrawals/list')),
   },
@@ -439,6 +459,10 @@ const StoreRoutes = [
   {
     path: '/transactions/list',
     component: lazy(() => import('../../views/sales-inventory/transactions/list')),
+  },
+  {
+    path: '/picker',
+    component: lazy(() => import('../../views/sales-inventory/picker')),
   }
 ]
 

@@ -18,6 +18,8 @@ import products from '@src/views/sales-inventory/product/store/reducer'
 import orders from '@src/views/sales-inventory/order/store/reducer'
 import settlements from '@src/views/sales-inventory/settlement/store/reducer'
 import reports from '@src/views/sales-inventory/reports/store/reducer'
+import inventoryReport from '@src/views/sales-inventory/inventory-reports/store/reducer'
+import picker from '@src/views/sales-inventory/picker/store/reducer'
 import withdrawals from '@src/views/sales-inventory/withdrawals/store/reducer'
 import transactions from '@src/views/sales-inventory/transactions/store/reducer'
 import suppliers from '@src/views/sales-inventory/supplier/store/reducer'
@@ -43,6 +45,8 @@ const rootReducer = combineReducers({
   products,
   settlements,
   reports,
+  inventoryReport,
+  picker,
   withdrawals,
   transactions,
   orders,
