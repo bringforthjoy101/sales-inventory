@@ -21,20 +21,35 @@ const PreviewCard = ({ data }) => {
 		console.log(process.env.NODE_ENV)
 		// products = process.env.NODE_ENV === 'production' ? JSON.parse(products) : products
 		// products = JSON.parse(products)
+		
+		// Check if products exists and is an array
+		if (!products || !Array.isArray(products)) return null
+		
 		return products.map((product) => {
+			// Calculate amount if not provided
+			const amount = product.amount || product.totalAmount || (product.price * product.qty) || 0
+			
 			return (
 				<tr key={product.id}>
 					<td className="py-1">
-						<p className="card-text font-weight-bold mb-25">{product.name} - {product.unitValue}{product.unit}</p>
+						<p className="card-text font-weight-bold mb-25">
+							{product.name} - {product.unitValue || 1}{product.unit || 'pcs'}
+						</p>
 					</td>
 					<td className="py-1">
-						<span className="font-weight-bold">₦{product.price.toLocaleString()}</span>
+						<span className="font-weight-bold">
+							₦{(product.price || 0).toLocaleString()}
+						</span>
 					</td>
 					<td className="py-1">
-						<span className="font-weight-bold">{product.qty.toLocaleString()}</span>
+						<span className="font-weight-bold">
+							{(product.qty || 0).toLocaleString()}
+						</span>
 					</td>
 					<td className="py-1">
-						<span className="font-weight-bold">₦{product.amount.toLocaleString()}</span>
+						<span className="font-weight-bold">
+							₦{amount.toLocaleString()}
+						</span>
 					</td>
 				</tr>
 			)
