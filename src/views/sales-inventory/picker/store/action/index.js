@@ -171,7 +171,7 @@ export const clearCurrentOrder = () => {
 }
 
 // Hold current order
-export const holdCurrentOrder = () => {
+export const holdCurrentOrder = (waiterInfo) => {
 	return (dispatch, getState) => {
 		const { currentOrder } = getState().picker
 		
@@ -180,7 +180,8 @@ export const holdCurrentOrder = () => {
 			return
 		}
 		
-		const heldOrder = orderStorage.holdOrder(currentOrder)
+		// Pass waiter info to holdOrder
+		const heldOrder = orderStorage.holdOrder(currentOrder, waiterInfo)
 		
 		if (heldOrder) {
 			// Clear current order
@@ -193,7 +194,7 @@ export const holdCurrentOrder = () => {
 				heldOrders
 			})
 			
-			swal('Success!', 'Order has been put on hold.', 'success')
+			swal('Success!', `Order has been put on hold by ${waiterInfo.name}.`, 'success')
 		}
 	}
 }

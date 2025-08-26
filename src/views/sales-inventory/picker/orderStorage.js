@@ -61,14 +61,15 @@ class OrderStorageService {
 	}
 
 	// Add order to held orders
-	holdOrder(order) {
+	holdOrder(order, waiterInfo) {
 		try {
 			const heldOrders = this.getHeldOrders()
 			const orderWithId = {
 				...order,
 				id: Date.now(),
 				heldAt: new Date().toISOString(),
-				status: 'held'
+				status: 'held',
+				waiter: waiterInfo // Store waiter information
 			}
 			heldOrders.push(orderWithId)
 			this.saveHeldOrders(heldOrders)
@@ -99,10 +100,10 @@ class OrderStorageService {
 			const orderToResume = heldOrders.find(order => order.id === orderId)
 			
 			if (orderToResume) {
-				// Save current order to held if it has items
+				// Save current order to held if it has items (preserve waiter info if exists)
 				const currentOrder = this.getCurrentOrder()
 				if (currentOrder && currentOrder.items && currentOrder.items.length > 0) {
-					this.holdOrder(currentOrder)
+					this.holdOrder(currentOrder, currentOrder.waiter || null)
 				}
 				
 				// Remove from held orders

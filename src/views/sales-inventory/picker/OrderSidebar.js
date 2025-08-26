@@ -43,6 +43,7 @@ import {
 	Wifi
 } from 'react-feather'
 import classnames from 'classnames'
+import { swal } from '@utils'
 import orderStorage from './orderStorage'
 import {
 	updateOrderItemQuantity,
@@ -71,6 +72,8 @@ const OrderSidebar = () => {
 	const [discount, setDiscount] = useState(0)
 	const [discountType, setDiscountType] = useState('amount')
 	const [selectedWaiterId, setSelectedWaiterId] = useState(null)
+	const [holdModal, setHoldModal] = useState(false)
+	const [holdWaiterId, setHoldWaiterId] = useState(null)
 
 	// Fetch waiters on mount
 	useEffect(() => {
@@ -107,13 +110,47 @@ const OrderSidebar = () => {
 
 	// Handle hold order
 	const handleHoldOrder = () => {
-		dispatch(holdCurrentOrder())
+		if (currentOrder.items.length === 0) {
+			swal('Oops!', 'No items in current order to hold.', 'warning')
+			return
+		}
+		setHoldModal(true)
+	}
+
+	// Handle confirm hold with waiter
+	const handleConfirmHold = () => {
+		if (!holdWaiterId) {
+			swal('Oops!', 'Please select a waiter/cashier.', 'warning')
+			return
+		}
+		
+		// Find waiter details (convert to strings for comparison)
+		const waiter = waiters.find(w => String(w.id) === String(holdWaiterId))
+		const waiterInfo = waiter ? { id: waiter.id, name: waiter.fullName } : { id: holdWaiterId, name: 'Unknown' }
+		
+		dispatch(holdCurrentOrder(waiterInfo))
+		setHoldModal(false)
+		setHoldWaiterId(null)
 	}
 
 	// Handle resume held order
 	const handleResumeOrder = (orderId) => {
+		// Pre-select waiter if held order has one
+		const heldOrder = heldOrders.find(o => o.id === orderId)
+		if (heldOrder && heldOrder.waiter && heldOrder.waiter.id) {
+			setSelectedWaiterId(String(heldOrder.waiter.id))
+		}
 		dispatch(resumeHeldOrder(orderId))
 		setActiveTab('current')
+	}
+	
+	// Handle opening payment modal
+	const handleOpenPayment = () => {
+		// Pre-select waiter if current order has one (from resumed order)
+		if (currentOrder.waiter && currentOrder.waiter.id) {
+			setSelectedWaiterId(String(currentOrder.waiter.id))
+		}
+		setPaymentModal(true)
 	}
 
 	// Handle delete held order
@@ -323,7 +360,7 @@ const OrderSidebar = () => {
 										color='success'
 										size='sm'
 										className='flex-grow-1'
-										onClick={() => setPaymentModal(true)}
+										onClick={handleOpenPayment}
 										disabled={submitting}
 									>
 										<Send size={14} className='mr-1' />
@@ -353,6 +390,11 @@ const OrderSidebar = () => {
 													<small className='text-muted'>
 														{new Date(order.heldAt).toLocaleString()}
 													</small>
+													{order.waiter && (
+														<small className='text-muted d-block'>
+															By: {order.waiter.name}
+														</small>
+													)}
 													<div className='mt-1'>
 														<Badge color='light-primary' className='mr-1'>
 															{orderTotals.itemCount} items
@@ -533,6 +575,60 @@ const OrderSidebar = () => {
 							disabled={submitting || !selectedWaiterId}
 						>
 							{submitting ? 'Processing...' : 'Complete Order'}
+						</Button>
+					</ModalFooter>
+				</Modal>
+
+				{/* Hold Order Modal */}
+				<Modal isOpen={holdModal} toggle={() => setHoldModal(false)}>
+					<ModalHeader toggle={() => setHoldModal(false)}>
+						Hold Order
+					</ModalHeader>
+					<ModalBody>
+						<p className='mb-3'>Select a waiter/cashier to assign this order before placing it on hold.</p>
+						
+						{/* Order Summary */}
+						<div className='mb-3 p-2 bg-light rounded'>
+							<h6>Order Summary</h6>
+							<div className='d-flex justify-content-between'>
+								<span>Items:</span>
+								<span>{totals.itemCount}</span>
+							</div>
+							<div className='d-flex justify-content-between'>
+								<span>Total:</span>
+								<strong className='text-primary'>{formatCurrency(totals.total)}</strong>
+							</div>
+						</div>
+
+						{/* Waiter Selection */}
+						<FormGroup>
+							<Label>Select Waiter/Cashier <span className='text-danger'>*</span></Label>
+							<Input
+								type='select'
+								value={holdWaiterId || ''}
+								onChange={(e) => setHoldWaiterId(e.target.value)}
+								required
+							>
+								<option value=''>-- Select Waiter --</option>
+								{waiters && waiters.map(waiter => (
+									<option key={waiter.id} value={waiter.id}>
+										{waiter.fullName}
+									</option>
+								))}
+							</Input>
+						</FormGroup>
+					</ModalBody>
+					<ModalFooter>
+						<Button color='secondary' onClick={() => setHoldModal(false)}>
+							Cancel
+						</Button>
+						<Button
+							color='warning'
+							onClick={handleConfirmHold}
+							disabled={!holdWaiterId}
+						>
+							<Pause size={14} className='mr-1' />
+							Hold Order
 						</Button>
 					</ModalFooter>
 				</Modal>
