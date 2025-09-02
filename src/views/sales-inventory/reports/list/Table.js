@@ -122,7 +122,7 @@ const ReportsTable = () => {
 	// ** Get data on mount
 	useEffect(() => {
 		console.log('store', store.loading)
-		dispatch(getSalesReport({ startDate: moment().format('L').split('/').join('-'), endDate: moment().format('L').split('/').join('-')}))
+		dispatch(getSalesReport({ startDate: moment().format('L').split('/').join('-'), endDate: moment().format('L').split('/').join('-') }))
 		dispatch(
 			getFilteredData(store.allData.orders, {
 				page: currentPage,
@@ -191,10 +191,10 @@ const ReportsTable = () => {
 		const dates = dateStr.split('to')
 		const startDate = dates[0].trim()
 		const endDate = dates[1]?.trim()
-		console.log({startDate, endDate})
+		console.log({ startDate, endDate })
 		dispatch(
 			// getSalesReport({ startDate: moment(date[0]).format('L').split('/').join('-'), endDate: moment(date[1]).split('/').join('-'), category: currentCategory.value })
-			getSalesReport({startDate, endDate})
+			getSalesReport({ startDate, endDate })
 		)
 		dispatch(
 			getFilteredData(store.allData.orders, {
@@ -258,7 +258,6 @@ const ReportsTable = () => {
 					result += item[key]
 					ctr++
 				}
-				
 			})
 			result += lineDelimiter
 			console.log('esults', result)
@@ -336,9 +335,7 @@ const ReportsTable = () => {
 			})
 		})
 		const date = new Date()
-		doc.save(
-			`orders_${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}_${date.getDate()}-${date.getMonth()}-${date.getFullYear()}.pdf`
-		)
+		doc.save(`orders_${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}_${date.getDate()}-${date.getMonth()}-${date.getFullYear()}.pdf`)
 	}
 
 	// ** Table data to render
@@ -374,14 +371,21 @@ const ReportsTable = () => {
 		printWindow.document.write('<html><head><title>Sales Report</title>')
 		printWindow.document.write('<style>body { font-family: Courier, monospace; }</style>')
 		printWindow.document.write('</head><body>')
-		printWindow.document.write('<h2>CODED CLUB</h2>')
+		printWindow.document.write('<h2>CIRCLE LOUNGE</h2>')
 		printWindow.document.write('<p>Address: The Dome, Akure</p>')
 		printWindow.document.write(`<h3>Orders Report</h3>`)
 		printWindow.document.write(`<p>From: ${new Date(picker[0]).toLocaleDateString()} To: ${new Date(picker[1]).toLocaleDateString()}</p>`)
 		printWindow.document.write('<table style="width:100%">')
-		printWindow.document.write('<tr><th style="text-align: left;">Item</th><th style="text-align: left;">Quantity</th><th style="text-align: left;">Total Amount</th></tr>')
-		sampleData.itemsSold.forEach(item => {
-			printWindow.document.write(`<tr><td>${item.name}</td><td>${item.quantity}</td><td>${item.totalAmount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}</td></tr>`)
+		printWindow.document.write(
+			'<tr><th style="text-align: left;">Item</th><th style="text-align: left;">Quantity</th><th style="text-align: left;">Total Amount</th></tr>'
+		)
+		sampleData.itemsSold.forEach((item) => {
+			printWindow.document.write(
+				`<tr><td>${item.name}</td><td>${item.quantity}</td><td>${item.totalAmount.toLocaleString('en-NG', {
+					style: 'currency',
+					currency: 'NGN',
+				})}</td></tr>`
+			)
 		})
 		printWindow.document.write('</table>')
 		printWindow.document.write(`<p>Total Orders: ${sampleData.totalSales}</p>`)
@@ -389,22 +393,25 @@ const ReportsTable = () => {
 		printWindow.document.write('<h2>Orders Status</h2>')
 		printWindow.document.write('<table style="width:100%">')
 		printWindow.document.write('<tr><th style="text-align: left;">Status</th><th style="text-align: left;">Amount</th></tr>')
-		Object.keys(sampleData.byStatus).forEach(status => {
-			printWindow.document.write(`<tr><td>${status}</td><td>${sampleData.byStatus[status].toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}</td></tr>`)
+		Object.keys(sampleData.byStatus).forEach((status) => {
+			printWindow.document.write(
+				`<tr><td>${status}</td><td>${sampleData.byStatus[status].toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}</td></tr>`
+			)
 		})
 		printWindow.document.write('</table>')
 
 		printWindow.document.write('<h2>Payment Modes</h2>')
 		printWindow.document.write('<table style="width:100%">')
 		printWindow.document.write('<tr><th style="text-align: left;">Payment Mode</th><th style="text-align: left;">Amount</th></tr>')
-		Object.keys(sampleData.byPaymentMode).forEach(mode => {
-			printWindow.document.write(`<tr><td>${mode}</td><td>${sampleData.byPaymentMode[mode].toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}</td></tr>`)
+		Object.keys(sampleData.byPaymentMode).forEach((mode) => {
+			printWindow.document.write(
+				`<tr><td>${mode}</td><td>${sampleData.byPaymentMode[mode].toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}</td></tr>`
+			)
 		})
 		printWindow.document.write('</table>')
 		printWindow.document.write('</body></html>')
 		printWindow.document.close()
 		printWindow.print()
-
 	}
 
 	const renderTable = () => {
@@ -425,21 +432,21 @@ const ReportsTable = () => {
 
 	const exportToPDF = () => {
 		const doc = new jsPDF()
-		doc.setFontSize(24);
-		doc.setTextColor("blue");
-		doc.text("CODED CLUB.", 20, 20);
-		doc.setFontSize(12);
-		doc.text(`Report Summary from ${moment(picker[0]).format('LLL')} to ${moment(picker[1]).format('LLL')}`, 20, 30);
+		doc.setFontSize(24)
+		doc.setTextColor('blue')
+		doc.text('CIRCLE LOUNGE.', 20, 20)
+		doc.setFontSize(12)
+		doc.text(`Report Summary from ${moment(picker[0]).format('LLL')} to ${moment(picker[1]).format('LLL')}`, 20, 30)
 		doc.autoTable({ html: '#report-table', startY: 40, startX: 80 })
 		doc.save(`report-summary-${moment(picker[0]).format('LLL')}-to-${moment(picker[1]).format('LLL')}-${new Date().getTime()}.pdf`)
-	  }
-	
-	  const exportToCSV = () => {
-		const data = renderTable().map(row => ({
+	}
+
+	const exportToCSV = () => {
+		const data = renderTable().map((row) => ({
 			Products: row.props.children[0].props.children,
 			Qty: row.props.children[1].props.children,
-			Sales: row.props.children[2].props.children
-		  }))
+			Sales: row.props.children[2].props.children,
+		}))
 		const csv = parse(data)
 		const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
 		const link = document.createElement('a')
@@ -450,7 +457,7 @@ const ReportsTable = () => {
 		document.body.appendChild(link)
 		link.click()
 		document.body.removeChild(link)
-	  }
+	}
 
 	return (
 		<Fragment>
@@ -529,65 +536,71 @@ const ReportsTable = () => {
 									<Fragment>
 										<Table bordered responsive id="report-table">
 											<thead>
-											<tr>
-												<th>Products</th>
-												<th>Qty</th>
-												<th>Sales</th>
-											</tr>
+												<tr>
+													<th>Products</th>
+													<th>Qty</th>
+													<th>Sales</th>
+												</tr>
 											</thead>
 											<tbody>
-											{renderTable()}
-											<tr key={'total'}>
-												<td></td>
-												<td>
-													<span className="align-middle fw-bold"> TOTAL Orders </span>
-												</td>
-												<td>
-													<h3 className="align-middle fw-bold"> {`${store?.summaryData?.totalOrders?.toLocaleString()} Orders`} </h3>
-												</td>
-											</tr>
-											<tr key={'total-amount'}>
-												<td></td>
-												<td>
-													<span className="align-middle fw-bold"> TOTAL Orders Amount </span>
-												</td>
-												<td>
-													<h3 className="align-middle fw-bold"> {`₦${store?.summaryData?.totalAmount?.toLocaleString()}`} </h3>
-												</td>
-											</tr>
-											<tr>
-												<td colSpan="3" className="text-center fw-bold"><h2>STATUS</h2></td>
-											</tr>
-											{store?.summaryData && Object.keys(store?.summaryData?.byStatus).map((key) => {
-												return (
-													<tr key={key}>
-														<td></td>
-														<td>
-															<span className="align-middle fw-bold"> {key} </span>
-														</td>
-														<td>
-															<h3 className="align-middle fw-bold"> {`₦${store?.summaryData?.byStatus[key].toLocaleString()}`} </h3>
-														</td>
-													</tr>
-												)
-											})}
-											<tr>
-												<td colSpan="3" className="text-center fw-bold"><h2>PAYMENTS</h2></td>
-											</tr>
-											{store?.summaryData && Object.keys(store?.summaryData?.byPaymentMode).map((key) => {
-												return (
-													<tr key={key}>
-														<td></td>
-														<td>
-															<span className="align-middle fw-bold"> {key} </span>
-														</td>
-														<td>
-															<h3 className="align-middle fw-bold"> {`₦${store?.summaryData?.byPaymentMode[key]?.toLocaleString()}`} </h3>
-														</td>
-													</tr>
-												)
-											})}
-											{/* <tr key={'discounts'}>
+												{renderTable()}
+												<tr key={'total'}>
+													<td></td>
+													<td>
+														<span className="align-middle fw-bold"> TOTAL Orders </span>
+													</td>
+													<td>
+														<h3 className="align-middle fw-bold"> {`${store?.summaryData?.totalOrders?.toLocaleString()} Orders`} </h3>
+													</td>
+												</tr>
+												<tr key={'total-amount'}>
+													<td></td>
+													<td>
+														<span className="align-middle fw-bold"> TOTAL Orders Amount </span>
+													</td>
+													<td>
+														<h3 className="align-middle fw-bold"> {`₦${store?.summaryData?.totalAmount?.toLocaleString()}`} </h3>
+													</td>
+												</tr>
+												<tr>
+													<td colSpan="3" className="text-center fw-bold">
+														<h2>STATUS</h2>
+													</td>
+												</tr>
+												{store?.summaryData &&
+													Object.keys(store?.summaryData?.byStatus).map((key) => {
+														return (
+															<tr key={key}>
+																<td></td>
+																<td>
+																	<span className="align-middle fw-bold"> {key} </span>
+																</td>
+																<td>
+																	<h3 className="align-middle fw-bold"> {`₦${store?.summaryData?.byStatus[key].toLocaleString()}`} </h3>
+																</td>
+															</tr>
+														)
+													})}
+												<tr>
+													<td colSpan="3" className="text-center fw-bold">
+														<h2>PAYMENTS</h2>
+													</td>
+												</tr>
+												{store?.summaryData &&
+													Object.keys(store?.summaryData?.byPaymentMode).map((key) => {
+														return (
+															<tr key={key}>
+																<td></td>
+																<td>
+																	<span className="align-middle fw-bold"> {key} </span>
+																</td>
+																<td>
+																	<h3 className="align-middle fw-bold"> {`₦${store?.summaryData?.byPaymentMode[key]?.toLocaleString()}`} </h3>
+																</td>
+															</tr>
+														)
+													})}
+												{/* <tr key={'discounts'}>
 												<td></td>
 												<td>
 													<span className="align-middle fw-bold"> TOTAL DISCOUNTS </span>
@@ -596,7 +609,7 @@ const ReportsTable = () => {
 													<h5 className="align-middle fw-bold"> {`${store?.allData?.sumOfOrdersDiscounts?.toLocaleString('en-US', { style: 'currency', currency: 'NGN' })}`} </h5>
 												</td>
 											</tr> */}
-											{/* <tr key={'profits'}>
+												{/* <tr key={'profits'}>
 												<td>Extras</td>
 												<td>
 													<span className="align-middle fw-bold"> TOTAL Profits </span>
@@ -605,7 +618,6 @@ const ReportsTable = () => {
 													<h5 className="align-middle fw-bold"> {`${store?.allData?.sumOfOrdersProfit?.toLocaleString('en-US', { style: 'currency', currency: 'NGN' })}`} </h5>
 												</td>
 											</tr> */}
-											
 											</tbody>
 										</Table>
 									</Fragment>

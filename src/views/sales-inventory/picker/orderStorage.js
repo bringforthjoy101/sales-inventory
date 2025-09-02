@@ -69,7 +69,7 @@ class OrderStorageService {
 				id: Date.now(),
 				heldAt: new Date().toISOString(),
 				status: 'held',
-				waiter: waiterInfo // Store waiter information
+				waiter: waiterInfo, // Store waiter information
 			}
 			heldOrders.push(orderWithId)
 			this.saveHeldOrders(heldOrders)
@@ -84,7 +84,7 @@ class OrderStorageService {
 	removeHeldOrder(orderId) {
 		try {
 			const heldOrders = this.getHeldOrders()
-			const filteredOrders = heldOrders.filter(order => order.id !== orderId)
+			const filteredOrders = heldOrders.filter((order) => order.id !== orderId)
 			this.saveHeldOrders(filteredOrders)
 			return true
 		} catch (error) {
@@ -97,27 +97,27 @@ class OrderStorageService {
 	resumeHeldOrder(orderId) {
 		try {
 			const heldOrders = this.getHeldOrders()
-			const orderToResume = heldOrders.find(order => order.id === orderId)
-			
+			const orderToResume = heldOrders.find((order) => order.id === orderId)
+
 			if (orderToResume) {
 				// Save current order to held if it has items (preserve waiter info if exists)
 				const currentOrder = this.getCurrentOrder()
 				if (currentOrder && currentOrder.items && currentOrder.items.length > 0) {
 					this.holdOrder(currentOrder, currentOrder.waiter || null)
 				}
-				
+
 				// Remove from held orders
 				this.removeHeldOrder(orderId)
-				
+
 				// Make it current
 				delete orderToResume.id
 				delete orderToResume.heldAt
 				delete orderToResume.status
 				this.saveCurrentOrder(orderToResume)
-				
+
 				return orderToResume
 			}
-			
+
 			return null
 		} catch (error) {
 			console.error('Error resuming held order:', error)
@@ -155,12 +155,12 @@ class OrderStorageService {
 				subtotal: 0,
 				discount: 0,
 				total: 0,
-				itemCount: 0
+				itemCount: 0,
 			}
 		}
 
 		const subtotal = order.items.reduce((sum, item) => {
-			return sum + (item.price * item.quantity)
+			return sum + item.price * item.quantity
 		}, 0)
 
 		// Calculate discount (can be amount or percentage)
@@ -179,7 +179,7 @@ class OrderStorageService {
 			subtotal,
 			discount: discountAmount,
 			total: Math.max(0, total), // Ensure total is never negative
-			itemCount: order.items.reduce((sum, item) => sum + item.quantity, 0)
+			itemCount: order.items.reduce((sum, item) => sum + item.quantity, 0),
 		}
 	}
 

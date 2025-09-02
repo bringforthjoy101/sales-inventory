@@ -21,19 +21,18 @@ const Print = () => {
 		{ id } = useParams()
 	// const [userData, setUserData] = useState(null)
 	const userData = JSON.parse(localStorage.getItem('userData'))
-const { selectedOrder } = store
+	const { selectedOrder } = store
 	useEffect(() => {
 		// axios.get(`/api/invoice/invoices/${id}`).then(response => {
 		//   setData(response.data)
 		// })
 		dispatch(getOrder(id))
 		// if (isUserLoggedIn()) setUserData(JSON.parse(localStorage.getItem('userData')))
-		// 
-		
+		//
 	}, [])
 	if (selectedOrder) {
 		setTimeout(window.print(), 3000)
-	} 
+	}
 
 	const renderTable = (products) => {
 		// products = process.env.NODE_ENV === 'production' ? JSON.parse(products) : products
@@ -62,13 +61,13 @@ const { selectedOrder } = store
 		delivered: 'light-success',
 	}
 
-	return selectedOrder !== null ?  (
+	return selectedOrder !== null ? (
 		<div className="invoice-print" style={{ color: 'black' }}>
 			<div className="row ml-1" style={{ width: '302px' }}>
 				{/* <div className='col-md-3'> */}
 				<div className="d-flex justify-content-between flex-column pb-2">
 					<h2 className="text-center mb-1" style={{ color: '#000000' }}>
-					CODED CLUB
+						CIRCLE LOUNGE
 					</h2>
 					<span className="invoice-date-title text-center mb-1">The DOME Akure, Ondo State.</span>
 					<div className="mt-md-0 mt-2">

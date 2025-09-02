@@ -81,9 +81,9 @@ const CustomHeader = ({ toggleSidebar, handlePerPage, rowsPerPage, userData }) =
 					xl="6"
 					className="d-flex align-items-sm-center justify-content-lg-end justify-content-start flex-lg-nowrap flex-wrap flex-sm-row flex-column pr-lg-1 p-0 mt-lg-0 mt-1"
 				>
-						<Button.Ripple color="primary" onClick={toggleSidebar}>
-							Make New Withdrawal
-						</Button.Ripple>
+					<Button.Ripple color="primary" onClick={toggleSidebar}>
+						Make New Withdrawal
+					</Button.Ripple>
 				</Col>
 			</Row>
 		</div>
@@ -116,7 +116,7 @@ const ReportsTable = () => {
 	// ** Get data on mount
 	useEffect(() => {
 		console.log('store', store.loading)
-		dispatch(getAllData({ startDate: moment().format('L').split('/').join('-'), endDate: moment().format('L').split('/').join('-')}))
+		dispatch(getAllData({ startDate: moment().format('L').split('/').join('-'), endDate: moment().format('L').split('/').join('-') }))
 		dispatch(
 			getFilteredData(store?.allData.withdrawals, {
 				page: currentPage,
@@ -178,9 +178,7 @@ const ReportsTable = () => {
 	const handleRangeSearch = (date) => {
 		const range = date.map((d) => new Date(d).getTime())
 		setPicker(range)
-		dispatch(
-			getAllData({ startDate: moment(date[0]).format('L').split('/').join('-'), endDate: moment(date[1]).format('L').split('/').join('-') })
-		)
+		dispatch(getAllData({ startDate: moment(date[0]).format('L').split('/').join('-'), endDate: moment(date[1]).format('L').split('/').join('-') }))
 		dispatch(
 			getFilteredData(store?.allData.withdrawals, {
 				page: currentPage,
@@ -243,7 +241,6 @@ const ReportsTable = () => {
 					result += item[key]
 					ctr++
 				}
-				
 			})
 			result += lineDelimiter
 			console.log('esults', result)
@@ -321,9 +318,7 @@ const ReportsTable = () => {
 			})
 		})
 		const date = new Date()
-		doc.save(
-			`orders_${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}_${date.getDate()}-${date.getMonth()}-${date.getFullYear()}.pdf`
-		)
+		doc.save(`orders_${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}_${date.getDate()}-${date.getMonth()}-${date.getFullYear()}.pdf`)
 	}
 
 	// ** Table data to render
@@ -375,7 +370,10 @@ const ReportsTable = () => {
 						<td>
 							<h5 className="align-middle">{wallet.count}</h5>
 						</td>
-						<td> <h5 className="align-middle">{`${wallet.totalAmount.toLocaleString('en-US', { style: 'currency', currency: 'NGN' })}`} </h5></td>
+						<td>
+							{' '}
+							<h5 className="align-middle">{`${wallet.totalAmount.toLocaleString('en-US', { style: 'currency', currency: 'NGN' })}`} </h5>
+						</td>
 					</tr>
 				</Fragment>
 			)
@@ -384,14 +382,14 @@ const ReportsTable = () => {
 
 	const exportToPDF = () => {
 		const doc = new jsPDF()
-		doc.setFontSize(24);
-		doc.setTextColor("blue");
-		doc.text("CODED CLUB Sales Platform.", 20, 20);
-		doc.setFontSize(12);
-		doc.text(`Withdrawal Summary from ${moment(picker[0]).format('LL')} to ${moment(picker[1]).format('LL')}`, 20, 30);
+		doc.setFontSize(24)
+		doc.setTextColor('blue')
+		doc.text('CIRCLE LOUNGE Sales Platform.', 20, 20)
+		doc.setFontSize(12)
+		doc.text(`Withdrawal Summary from ${moment(picker[0]).format('LL')} to ${moment(picker[1]).format('LL')}`, 20, 30)
 		doc.autoTable({ html: '#withdrawal-table', startY: 40, startX: 80 })
 		doc.save(`withdrawal-summary-${moment(picker[0]).format('LL')}-to-${moment(picker[1]).format('LL')}-${new Date().getTime()}.pdf`)
-	  }
+	}
 
 	return (
 		<Fragment>
@@ -467,26 +465,31 @@ const ReportsTable = () => {
 									<Fragment>
 										<Table bordered responsive id="withdrawal-table">
 											<thead>
-											<tr>
-												<th>Wallet</th>
-												<th>Category</th>
-												<th>Count</th>
-												<th>Total</th>
-											</tr>
+												<tr>
+													<th>Wallet</th>
+													<th>Category</th>
+													<th>Count</th>
+													<th>Total</th>
+												</tr>
 											</thead>
 											<tbody>
-											{renderTable()}
-											<tr key={'total'}>
-												<td></td>
-												<td></td>
-												<td>
-													<span className="align-middle fw-bold"> GRAND TOTAL </span>
-												</td>
-												<td>
-													<h3 className="align-middle fw-bold"> {`${store?.allData?.withdrawals?.filter(withdrawal => withdrawal.status === 'SUCCESS').reduce((total, withdrawal) => total + withdrawal.amount, 0).toLocaleString('en-US', { style: 'currency', currency: 'NGN' })}`} </h3>
-												</td>
-											</tr>
-											
+												{renderTable()}
+												<tr key={'total'}>
+													<td></td>
+													<td></td>
+													<td>
+														<span className="align-middle fw-bold"> GRAND TOTAL </span>
+													</td>
+													<td>
+														<h3 className="align-middle fw-bold">
+															{' '}
+															{`${store?.allData?.withdrawals
+																?.filter((withdrawal) => withdrawal.status === 'SUCCESS')
+																.reduce((total, withdrawal) => total + withdrawal.amount, 0)
+																.toLocaleString('en-US', { style: 'currency', currency: 'NGN' })}`}{' '}
+														</h3>
+													</td>
+												</tr>
 											</tbody>
 										</Table>
 									</Fragment>
@@ -552,12 +555,14 @@ const ReportsTable = () => {
 						</UncontrolledButtonDropdown>
 					</Col>
 					<Col
-						xl='4' md='12'
-						className='d-flex align-items-sm-cente justify-content-end flex-lg-nowrap flex-wrap flex-sm-row flex-column pr-lg-1 p-0 mt-lg-0 mt-1'
+						xl="4"
+						md="12"
+						className="d-flex align-items-sm-cente justify-content-end flex-lg-nowrap flex-wrap flex-sm-row flex-column pr-lg-1 p-0 mt-lg-0 mt-1"
 					>
-						
-							<Button.Ripple color='primary' onClick={toggleSidebar}> Make New Withdrawal </Button.Ripple>
-						
+						<Button.Ripple color="primary" onClick={toggleSidebar}>
+							{' '}
+							Make New Withdrawal{' '}
+						</Button.Ripple>
 					</Col>
 				</Row>
 				<DataTable
