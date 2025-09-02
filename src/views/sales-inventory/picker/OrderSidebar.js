@@ -372,73 +372,76 @@ const OrderSidebar = () => {
 					</TabPane>
 
 					{/* Held Orders Tab */}
-					<TabPane tabId='held' className='p-2'>
-						{heldOrders.length === 0 ? (
-							<div className='text-center py-5'>
-								<Clock size={48} className='text-muted mb-2' />
-								<p className='text-muted'>No orders on hold</p>
-							</div>
-						) : (
-							<ListGroup flush>
-								{heldOrders.map((order) => {
-									const orderTotals = orderStorage.calculateOrderTotals(order)
-									return (
-										<ListGroupItem key={order.id} className='px-0'>
-											<div className='d-flex justify-content-between align-items-start mb-2'>
-												<div>
-													<h6 className='mb-0'>Order #{order.id}</h6>
-													<small className='text-muted'>
-														{new Date(order.heldAt).toLocaleString()}
-													</small>
-													{order.waiter && (
-														<small className='text-muted d-block'>
-															By: {order.waiter.name}
+					<TabPane tabId='held' className='flex-grow-1 d-flex flex-column'>
+						{/* Held Orders List */}
+						<div className='order-items flex-grow-1 overflow-auto p-2'>
+							{heldOrders.length === 0 ? (
+								<div className='text-center py-5'>
+									<Clock size={48} className='text-muted mb-2' />
+									<p className='text-muted'>No orders on hold</p>
+								</div>
+							) : (
+								<ListGroup flush>
+									{heldOrders.map((order) => {
+										const orderTotals = orderStorage.calculateOrderTotals(order)
+										return (
+											<ListGroupItem key={order.id} className='px-0'>
+												<div className='d-flex justify-content-between align-items-start mb-2'>
+													<div>
+														<h6 className='mb-0'>Order #{order.id}</h6>
+														<small className='text-muted'>
+															{new Date(order.heldAt).toLocaleString()}
 														</small>
+														{order.waiter && (
+															<small className='text-muted d-block'>
+																By: {order.waiter.name}
+															</small>
+														)}
+														<div className='mt-1'>
+															<Badge color='light-primary' className='mr-1'>
+																{orderTotals.itemCount} items
+															</Badge>
+															<Badge color='light-success'>
+																{formatCurrency(orderTotals.total)}
+															</Badge>
+														</div>
+													</div>
+													<div>
+														<Button
+															color='success'
+															size='sm'
+															className='mr-1'
+															onClick={() => handleResumeOrder(order.id)}
+														>
+															<Play size={14} />
+														</Button>
+														<Button
+															color='danger'
+															size='sm'
+															onClick={() => handleDeleteHeldOrder(order.id)}
+														>
+															<Trash2 size={14} />
+														</Button>
+													</div>
+												</div>
+												<div className='small'>
+													{order.items.slice(0, 3).map((item, idx) => (
+														<div key={idx}>
+															• {item.name} ({item.quantity})
+														</div>
+													))}
+													{order.items.length > 3 && (
+														<div className='text-muted'>
+															...and {order.items.length - 3} more
+														</div>
 													)}
-													<div className='mt-1'>
-														<Badge color='light-primary' className='mr-1'>
-															{orderTotals.itemCount} items
-														</Badge>
-														<Badge color='light-success'>
-															{formatCurrency(orderTotals.total)}
-														</Badge>
-													</div>
 												</div>
-												<div>
-													<Button
-														color='success'
-														size='sm'
-														className='mr-1'
-														onClick={() => handleResumeOrder(order.id)}
-													>
-														<Play size={14} />
-													</Button>
-													<Button
-														color='danger'
-														size='sm'
-														onClick={() => handleDeleteHeldOrder(order.id)}
-													>
-														<Trash2 size={14} />
-													</Button>
-												</div>
-											</div>
-											<div className='small'>
-												{order.items.slice(0, 3).map((item, idx) => (
-													<div key={idx}>
-														• {item.name} ({item.quantity})
-													</div>
-												))}
-												{order.items.length > 3 && (
-													<div className='text-muted'>
-														...and {order.items.length - 3} more
-													</div>
-												)}
-											</div>
-										</ListGroupItem>
-									)
-								})}
-							</ListGroup>
-						)}
+											</ListGroupItem>
+										)
+									})}
+								</ListGroup>
+							)}
+						</div>
 					</TabPane>
 				</TabContent>
 
